@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shoping_flutter/components/badgeee.dart';
+import 'package:shoping_flutter/models/cart.dart';
 import 'package:shoping_flutter/models/products_list.dart';
+import 'package:shoping_flutter/utils/app_routes.dart';
 import '../components/product_grid.dart';
 
-enum FilterOptions{
+enum FilterOptions {
   Favorito,
   All,
 }
@@ -29,7 +32,8 @@ class _ProductsOverViewScreenState extends State<ProductsOverViewScreen> {
         actions: [
           PopupMenuButton(
             icon: Icon(Icons.more_vert),
-            itemBuilder: (_) => [
+            itemBuilder: (_) =>
+            [
               const PopupMenuItem(
                 value: FilterOptions.Favorito,
                 child: Text("Somente Favoritos"),
@@ -39,19 +43,36 @@ class _ProductsOverViewScreenState extends State<ProductsOverViewScreen> {
                 child: Text("Todos"),
               ),
             ],
-            onSelected:(FilterOptions selecte){
-              setState(() {
-                if(selecte == FilterOptions.Favorito){
-                  _showFavoriteOnly = true;
-                }else{
-                  _showFavoriteOnly = false;
-                }
-              },);
-            } ,
+            onSelected: (FilterOptions selecte) {
+              setState(
+                    () {
+                  if (selecte == FilterOptions.Favorito) {
+                    _showFavoriteOnly = true;
+                  } else {
+                    _showFavoriteOnly = false;
+                  }
+                },
+              );
+            },
           ),
+          Consumer<Cart>(
+            builder: (ctx, cart, child) =>
+                Badgeee(
+                    value: cart.itemsCount.toString(),
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(AppRoute.CART_SCREEN);
+                      },
+                      icon: const Icon(
+                        Icons.shopping_cart,
+                      ),
+                    )),
+          )
         ],
       ),
-      body: ProductGrid(showfavoriteOnly: _showFavoriteOnly,),
+      body: ProductGrid(
+        showfavoriteOnly: _showFavoriteOnly,
+      ),
     );
   }
 }

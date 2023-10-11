@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shoping_flutter/models/cart.dart';
 import 'package:shoping_flutter/models/products.dart';
 import 'package:shoping_flutter/models/products_list.dart';
 import 'package:shoping_flutter/utils/app_routes.dart';
@@ -11,6 +12,8 @@ class ProductsItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context);
+    final cart = Provider.of<Cart>(context, listen: false);
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
@@ -29,7 +32,9 @@ class ProductsItem extends StatelessWidget {
             color: Theme.of(context).colorScheme.secondary,
           ),
           trailing: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              cart.addItem(product);
+            },
             icon: const Icon(Icons.shopping_cart),
             color: Theme.of(context).colorScheme.secondary,
           ),
