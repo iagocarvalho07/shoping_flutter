@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shoping_flutter/models/order_list_provider.dart';
 import 'package:shoping_flutter/models/products_list.dart';
 import 'package:shoping_flutter/screens/cart_screen.dart';
+import 'package:shoping_flutter/screens/orders_screen.dart';
 import 'package:shoping_flutter/screens/products_details_screen.dart';
 import 'package:shoping_flutter/screens/products_over_view.dart';
 import 'package:shoping_flutter/utils/app_routes.dart';
@@ -34,10 +35,11 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Lato',
         ),
         routes: {
+          AppRoute.Home: (ctx) => ProductsOverViewScreen(),
           AppRoute.PRODUCT_DETAILS: (ctx) => const ProductsDetailsScreen(),
           AppRoute.CART_SCREEN: (ctx) => CartScreen(),
+          AppRoute.ORDERS: (ctx) => OdersScreen()
         },
-        home: const ProductsOverViewScreen(),
         debugShowCheckedModeBanner: false,
       ),
     );

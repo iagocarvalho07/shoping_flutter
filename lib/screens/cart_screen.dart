@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shoping_flutter/components/cart_item_component.dart';
+import 'package:shoping_flutter/models/order_list_provider.dart';
 
 import '../models/cart.dart';
 
@@ -36,7 +37,10 @@ class CartScreen extends StatelessWidget {
                   ),
                   Spacer(),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Provider.of<OrderListProvider>(context, listen: false).addOrder(cart);
+                      cart.clear();
+                    },
                     child: const Text(
                       "Comprar",
                       style: TextStyle(fontSize: 20),

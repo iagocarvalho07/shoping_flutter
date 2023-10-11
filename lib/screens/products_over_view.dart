@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shoping_flutter/components/app_drawer.dart';
 import 'package:shoping_flutter/components/badgeee.dart';
 import 'package:shoping_flutter/models/cart.dart';
 import 'package:shoping_flutter/models/products_list.dart';
@@ -73,6 +74,7 @@ class _ProductsOverViewScreenState extends State<ProductsOverViewScreen> {
       body: ProductGrid(
         showfavoriteOnly: _showFavoriteOnly,
       ),
+      drawer: AppDrawer(),
     );
   }
 }
