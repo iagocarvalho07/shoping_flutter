@@ -6,8 +6,8 @@ import 'package:shoping_flutter/models/products.dart';
 import 'package:shoping_flutter/models/products_list.dart';
 import 'package:shoping_flutter/utils/app_routes.dart';
 
-class ProductsItem extends StatelessWidget {
-  const ProductsItem({super.key});
+class ProductsGridItem extends StatelessWidget {
+  const ProductsGridItem({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +33,16 @@ class ProductsItem extends StatelessWidget {
           ),
           trailing: IconButton(
             onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text("Produto adicionado com Sucesso!"),
+                duration: Duration(seconds: 2),
+                action: SnackBarAction(
+                  label: "DESFAZER",
+                  onPressed: () {
+                    cart.removeSingleItem(product.id);
+                  },
+                ),
+              ));
               cart.addItem(product);
             },
             icon: const Icon(Icons.shopping_cart),

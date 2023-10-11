@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import 'package:shoping_flutter/components/products_item.dart';
+import 'package:shoping_flutter/components/products_grid_item.dart';
 import '../models/products.dart';
 import '../models/products_list.dart';
 
@@ -25,7 +25,7 @@ class ProductGrid extends StatelessWidget {
       itemBuilder: (ctx, index) {
         return ChangeNotifierProvider.value(
           value: loadedProduts[index],
-          child: ProductsItem(),
+          child: ProductsGridItem(),
         );
       },
     );
