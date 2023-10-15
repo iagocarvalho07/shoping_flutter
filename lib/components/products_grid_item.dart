@@ -51,9 +51,12 @@ class ProductsGridItem extends StatelessWidget {
           backgroundColor: Colors.black54,
         ),
         child: GestureDetector(
-          child: Image.network(
-            product.imageUrl,
-            fit: BoxFit.cover,
+          child: Hero(
+            tag: "Image-Tag${product.id}",
+            child: Image.network(
+              product.imageUrl,
+              fit: BoxFit.cover,
+            ),
           ),
           onTap: () {
             Navigator.of(context)

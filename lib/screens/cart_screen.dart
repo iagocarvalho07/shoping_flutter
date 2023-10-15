@@ -15,7 +15,7 @@ class CartScreen extends StatelessWidget {
     final items = cart.item.values.toList();
     return Scaffold(
       appBar: AppBar(
-        title: Text("Carrinho"),
+        title: const Text("Carrinho"),
       ),
       body: Column(
         children: [
@@ -35,17 +35,8 @@ class CartScreen extends StatelessWidget {
                     label: Text("R\$${cart.totalAmount}",
                         style: Theme.of(context).primaryTextTheme.titleMedium!),
                   ),
-                  Spacer(),
-                  TextButton(
-                    onPressed: () {
-                      Provider.of<OrderListProvider>(context, listen: false).addOrder(cart);
-                      cart.clear();
-                    },
-                    child: const Text(
-                      "Comprar",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
+                  const Spacer(),
+                  Cartbutton(cart: cart),
                 ],
               ),
             ),
@@ -60,5 +51,42 @@ class CartScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class Cartbutton extends StatefulWidget {
+  const Cartbutton({
+    super.key,
+    required this.cart,
+  });
+
+  final Cart cart;
+
+  @override
+  State<Cartbutton> createState() => _CartbuttonState();
+}
+
+class _CartbuttonState extends State<Cartbutton> {
+  bool _isloading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return _isloading
+        ? const CircularProgressIndicator()
+        : TextButton(
+            onPressed: widget.cart.itemsCount == 0
+                ? null
+                : () async {
+                    setState(() => _isloading = true);
+                    await Provider.of<OrderListProvider>(context, listen: false)
+                        .addOrder(widget.cart);
+                    widget.cart.clear();
+                    setState(() => _isloading = false);
+                  },
+            child: const Text(
+              "Comprar",
+              style: TextStyle(fontSize: 20),
+            ),
+          );
   }
 }

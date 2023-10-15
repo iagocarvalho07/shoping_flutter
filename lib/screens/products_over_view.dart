@@ -22,6 +22,20 @@ class ProductsOverViewScreen extends StatefulWidget {
 
 class _ProductsOverViewScreenState extends State<ProductsOverViewScreen> {
   bool _showFavoriteOnly = false;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<ProductsList>(context, listen: false)
+        .loadProducts()
+        .then((value) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +47,7 @@ class _ProductsOverViewScreenState extends State<ProductsOverViewScreen> {
         actions: [
           PopupMenuButton(
             icon: Icon(Icons.more_vert),
-            itemBuilder: (_) =>
-            [
+            itemBuilder: (_) => [
               const PopupMenuItem(
                 value: FilterOptions.Favorito,
                 child: Text("Somente Favoritos"),
@@ -46,7 +59,7 @@ class _ProductsOverViewScreenState extends State<ProductsOverViewScreen> {
             ],
             onSelected: (FilterOptions selecte) {
               setState(
-                    () {
+                () {
                   if (selecte == FilterOptions.Favorito) {
                     _showFavoriteOnly = true;
                   } else {
@@ -57,23 +70,24 @@ class _ProductsOverViewScreenState extends State<ProductsOverViewScreen> {
             },
           ),
           Consumer<Cart>(
-            builder: (ctx, cart, child) =>
-                Badgeee(
-                    value: cart.itemsCount.toString(),
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(AppRoute.CART_SCREEN);
-                      },
-                      icon: const Icon(
-                        Icons.shopping_cart,
-                      ),
-                    )),
+            builder: (ctx, cart, child) => Badgeee(
+                value: cart.itemsCount.toString(),
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(AppRoute.CART_SCREEN);
+                  },
+                  icon: const Icon(
+                    Icons.shopping_cart,
+                  ),
+                )),
           )
         ],
       ),
-      body: ProductGrid(
-        showfavoriteOnly: _showFavoriteOnly,
-      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ProductGrid(
+              showfavoriteOnly: _showFavoriteOnly,
+            ),
       drawer: AppDrawer(),
     );
   }

@@ -1,6 +1,3 @@
-import 'dart:ffi';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shoping_flutter/models/products.dart';
@@ -21,6 +18,8 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   final _formeKey = GlobalKey<FormState>();
   final _formDataMap = <String, dynamic>{};
 
+  bool _isloading = false;
+
   @override
   void initState() {
     super.initState();
@@ -30,9 +29,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if(_formDataMap.isEmpty){
+    if (_formDataMap.isEmpty) {
       final argument = ModalRoute.of(context)?.settings.arguments;
-      if(argument != null){
+      if (argument != null) {
         final product = argument as Product;
         _formDataMap['id'] = product.id;
         _formDataMap['name'] = product.title;
@@ -71,8 +70,29 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     //   price: _formDataMap['preco'] as double,
     //   imageUrl: _formDataMap['imageUrl'] as String,
     // );
-    Provider.of<ProductsList>(context, listen: false).addProductFromData(_formDataMap);
-    Navigator.of(context).pop();
+    setState(() {
+      _isloading = true;
+    });
+    Provider.of<ProductsList>(context, listen: false)
+        .addProductFromData(_formDataMap)
+        .catchError((onError) {
+      return showDialog<void>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text("Ocorreu um erro!"),
+          content: Text(onError.toString()),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.of(context).pop(), child: Text("OK"))
+          ],
+        ),
+      );
+    }).then((value) => {
+              setState(() {
+                _isloading = false;
+              }),
+              Navigator.of(context).pop()
+            });
   }
 
   @override
@@ -84,113 +104,115 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
           IconButton(onPressed: _submitForm, icon: const Icon(Icons.save))
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Form(
-          key: _formeKey,
-          child: ListView(
-            children: [
-              TextFormField(
-                initialValue: _formDataMap['name']?.toString(),
-                decoration: const InputDecoration(labelText: 'Nome'),
-                onFieldSubmitted: (_) {
-                  FocusScope.of(context).requestFocus(priceFocus);
-                },
-                textInputAction: TextInputAction.next,
-                onSaved: (name) => _formDataMap['name'] = name ?? '-',
-                validator: (_name) {
-                  final name = _name ?? '';
-                  if (name.trim().isEmpty) {
-                    return "Nome é Obrigatorio";
-                  }
-                  if (name.trim().length < 3) {
-                    return "Nome pricisa no minimo de 3 letras";
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                initialValue: _formDataMap['preco']?.toString(),
-                decoration: const InputDecoration(labelText: 'Preço'),
-                onFieldSubmitted: (_) {
-                  FocusScope.of(context).requestFocus(descriptionFocus);
-                },
-                focusNode: priceFocus,
-                textInputAction: TextInputAction.next,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-                onSaved: (preco) =>
-                    _formDataMap['preco'] = double.parse(preco ?? '0'),
-                validator: (_preci) {
-                  final priceString = _preci ?? '-1';
-                  final prince = double.tryParse(priceString) ?? -1;
-                  if (prince <= 0) {
-                    return 'informe um preço valido';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                initialValue: _formDataMap['descricao']?.toString(),
-                decoration: const InputDecoration(labelText: 'Descrição'),
-                onFieldSubmitted: (_) {
-                  FocusScope.of(context).requestFocus(imageFocus);
-                },
-                onSaved: (descricao) =>
-                    _formDataMap['descricao'] = descricao ?? '-',
-                focusNode: descriptionFocus,
-                textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.multiline,
-                maxLines: 3,
-                validator: (_descricao) {
-                  final descricao = _descricao ?? '';
-                  if (descricao.trim().isEmpty) {
-                    return "descrição é Obrigatorio";
-                  }
-                  if (descricao.trim().length < 10) {
-                    return "descrição pricisa no minimo de 10 letras";
-                  }
-                  return null;
-                },
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      decoration:
-                          const InputDecoration(labelText: 'Url Da Imagem'),
-                      focusNode: imageFocus,
-                      textInputAction: TextInputAction.done,
-                      keyboardType: TextInputType.url,
-                      controller: _imageUrlControler,
-                      onFieldSubmitted: (_) => _submitForm(),
-                      onSaved: (imageUrl) =>
-                          _formDataMap['imageUrl'] = imageUrl ?? '-',
+      body: _isloading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : Padding(
+              padding: const EdgeInsets.all(15),
+              child: Form(
+                key: _formeKey,
+                child: ListView(
+                  children: [
+                    TextFormField(
+                      initialValue: _formDataMap['name']?.toString(),
+                      decoration: const InputDecoration(labelText: 'Nome'),
+                      onFieldSubmitted: (_) {
+                        FocusScope.of(context).requestFocus(priceFocus);
+                      },
+                      textInputAction: TextInputAction.next,
+                      onSaved: (name) => _formDataMap['name'] = name ?? '-',
+                      validator: (_name) {
+                        final name = _name ?? '';
+                        if (name.trim().isEmpty) {
+                          return "Nome é Obrigatorio";
+                        }
+                        if (name.trim().length < 3) {
+                          return "Nome pricisa no minimo de 3 letras";
+                        }
+                        return null;
+                      },
                     ),
-                  ),
-                  Container(
-                    height: 100,
-                    width: 100,
-                    margin: const EdgeInsets.only(top: 10, left: 10),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey, width: 1)),
-                    alignment: Alignment.center,
-                    child: _imageUrlControler.text.isEmpty
-                        ? const Text("Informe A url")
-                        : FittedBox(
-                            child: Image.network(
-                              _imageUrlControler.text,
-                              fit: BoxFit.cover,
-                            ),
+                    TextFormField(
+                      initialValue: _formDataMap['preco']?.toString(),
+                      decoration: const InputDecoration(labelText: 'Preço'),
+                      onFieldSubmitted: (_) {
+                        FocusScope.of(context).requestFocus(descriptionFocus);
+                      },
+                      focusNode: priceFocus,
+                      textInputAction: TextInputAction.next,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      onSaved: (preco) =>
+                          _formDataMap['preco'] = double.parse(preco ?? '0'),
+                      validator: (_preci) {
+                        final priceString = _preci ?? '-1';
+                        final prince = double.tryParse(priceString) ?? -1;
+                        if (prince <= 0) {
+                          return 'informe um preço valido';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      initialValue: _formDataMap['descricao']?.toString(),
+                      decoration: const InputDecoration(labelText: 'Descrição'),
+                      onFieldSubmitted: (_) {
+                        FocusScope.of(context).requestFocus(imageFocus);
+                      },
+                      onSaved: (descricao) =>
+                          _formDataMap['descricao'] = descricao ?? '-',
+                      focusNode: descriptionFocus,
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 3,
+                      validator: (_descricao) {
+                        final descricao = _descricao ?? '';
+                        if (descricao.trim().isEmpty) {
+                          return "descrição é Obrigatorio";
+                        }
+                        if (descricao.trim().length < 10) {
+                          return "descrição pricisa no minimo de 10 letras";
+                        }
+                        return null;
+                      },
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                                labelText: 'Url Da Imagem'),
+                            focusNode: imageFocus,
+                            textInputAction: TextInputAction.done,
+                            keyboardType: TextInputType.url,
+                            controller: _imageUrlControler,
+                            onFieldSubmitted: (_) => _submitForm(),
+                            onSaved: (imageUrl) =>
+                                _formDataMap['imageUrl'] = imageUrl ?? '-',
                           ),
-                  )
-                ],
+                        ),
+                        Container(
+                          height: 100,
+                          width: 100,
+                          margin: const EdgeInsets.only(top: 10, left: 10),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey, width: 1)),
+                          alignment: Alignment.center,
+                          child: _imageUrlControler.text.isEmpty
+                              ? const Text("Informe A url")
+                              : Image.network(
+                                  _imageUrlControler.text,
+                                  fit: BoxFit.cover,
+                                ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }

@@ -17,12 +17,15 @@ class ProductsDetailsScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              height: 300,
-              width: double.infinity,
-              child: Image.network(
-                product.imageUrl,
-                fit: BoxFit.cover,
+            Hero(
+              tag: "Image-Tag${product.id}",
+              child: Container(
+                height: 300,
+                width: double.infinity,
+                child: Image.network(
+                  product.imageUrl,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             SizedBox(

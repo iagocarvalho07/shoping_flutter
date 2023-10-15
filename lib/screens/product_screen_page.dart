@@ -8,6 +8,10 @@ import 'package:shoping_flutter/utils/app_routes.dart';
 class ProductScreenPage extends StatelessWidget {
   const ProductScreenPage({super.key});
 
+  Future<void> _refreshProduct(BuildContext context) {
+    return Provider.of<ProductsList>(context, listen: false).loadProducts();
+  }
+
   @override
   Widget build(BuildContext context) {
     final ProductsList productsList = Provider.of(context);
@@ -23,17 +27,20 @@ class ProductScreenPage extends StatelessWidget {
         ],
       ),
       drawer: AppDrawer(),
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: ListView.builder(
-          itemCount: productsList.itemsCount,
-          itemBuilder: (ctx, index) => Column(
-            children: [
-              ProductItemComponent(
-                product: productsList.items[index],
-              ),
-              const Divider()
-            ],
+      body: RefreshIndicator(
+        onRefresh: () => _refreshProduct(context),
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: ListView.builder(
+            itemCount: productsList.itemsCount,
+            itemBuilder: (ctx, index) => Column(
+              children: [
+                ProductItemComponent(
+                  product: productsList.items[index],
+                ),
+                const Divider()
+              ],
+            ),
           ),
         ),
       ),
