@@ -7,11 +7,16 @@ import 'package:shoping_flutter/data/dummy_data.dart';
 import 'package:shoping_flutter/models/products.dart';
 
 class ProductsList with ChangeNotifier {
+  String _token;
   List<Product> _Items = [];
+
+  ProductsList(this._token, this._Items);
+
   final _baseUrl = 'https://shop-flutter-fb908-default-rtdb.firebaseio.com';
   final _baseUrlGet =
       'https://shop-flutter-fb908-default-rtdb.firebaseio.com/products.json';
-  final _baseUrlUpdate = 'https://shop-flutter-fb908-default-rtdb.firebaseio.com/products';
+  final _baseUrlUpdate =
+      'https://shop-flutter-fb908-default-rtdb.firebaseio.com/products';
 
   // bool _showFavoriteOnly = false;
 
@@ -39,7 +44,7 @@ class ProductsList with ChangeNotifier {
 
   Future<void> addProduct(Product product) {
     final future = post(
-      Uri.parse('$_baseUrl/products.json'),
+      Uri.parse('$_baseUrl/products.json?auth=$_token'),
       body: jsonEncode({
         "name": product.title,
         "description": product.description,
@@ -66,19 +71,18 @@ class ProductsList with ChangeNotifier {
 
   Future<void> loadProducts() async {
     _Items.clear();
-    final getProductsFromFb = await get(Uri.parse(_baseUrlGet));
+    final getProductsFromFb = await get(Uri.parse('$_baseUrlGet?auth=$_token'));
     print(" oque que aconteceu ${getProductsFromFb.body} final da solicitação");
     Map<String, dynamic> data = jsonDecode(getProductsFromFb.body);
     data.forEach((productId, productData) {
       _Items.add(
         Product(
-          id: productId,
-          title:productData['name'],
-          description: productData['description'],
-          price: productData['price'],
-          imageUrl: productData['imageUrl'],
-          isfavorite: productData['isFavorite']
-        ),
+            id: productId,
+            title: productData['name'],
+            description: productData['description'],
+            price: productData['price'],
+            imageUrl: productData['imageUrl'],
+            isfavorite: productData['isFavorite']),
       );
     });
     notifyListeners();
@@ -87,8 +91,8 @@ class ProductsList with ChangeNotifier {
   Future<void> updateProdut(Product product) async {
     int index = _Items.indexWhere((element) => element.id == product.id);
     if (index >= 0) {
-        await patch(
-        Uri.parse('$_baseUrlUpdate/${product.id}.json'),
+      await patch(
+        Uri.parse('$_baseUrlUpdate/${product.id}.json?auth=$_token'),
         body: jsonEncode({
           "name": product.title,
           "description": product.description,
@@ -106,7 +110,7 @@ class ProductsList with ChangeNotifier {
 
     if (index >= 0) {
       await delete(
-        Uri.parse('$_baseUrlUpdate/${product.id}.json'),
+        Uri.parse('$_baseUrlUpdate/${product.id}.json?auth=$_token'),
       );
       _Items.removeWhere((p) => p.id == product.id);
       notifyListeners();

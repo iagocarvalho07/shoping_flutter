@@ -23,7 +23,6 @@ class _AuthFormState extends State<AuthForm> {
   };
 
   bool _isLogin() => _authMode == AuthMode.login;
-
   bool _isSignup() => _authMode == AuthMode.signup;
 
   void _switchAuthMode() {
@@ -40,12 +39,13 @@ class _AuthFormState extends State<AuthForm> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text("Ocorreu um Erro"),
+        title: const Text('Ocorreo um Erro'),
         content: Text(msg),
         actions: [
           TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text("Fechar"))
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Fechar'),
+          ),
         ],
       ),
     );
@@ -61,26 +61,27 @@ class _AuthFormState extends State<AuthForm> {
     setState(() => _isLoading = true);
 
     _formKey.currentState?.save();
-    AuthProvider autoprovider = Provider.of(context, listen: false);
+    Auth auth = Provider.of(context, listen: false);
 
     try {
       if (_isLogin()) {
-        await autoprovider.login(
+        // Login
+        await auth.login(
           _authData['email']!,
           _authData['password']!,
         );
       } else {
-        await autoprovider.signup(
+        // Registrar
+        await auth.signup(
           _authData['email']!,
           _authData['password']!,
         );
       }
     } on AuthException catch (error) {
       _showErrorDialog(error.toString());
-    }catch(error){
-      _showErrorDialog("Ocorreu um Erro Inesperado");
+    } catch (error) {
+      _showErrorDialog('Ocorreu um erro inesperado!');
     }
-
     setState(() => _isLoading = false);
   }
 
@@ -129,18 +130,18 @@ class _AuthFormState extends State<AuthForm> {
               if (_isSignup())
                 TextFormField(
                   decoration:
-                      const InputDecoration(labelText: 'Confirmar Senha'),
+                  const InputDecoration(labelText: 'Confirmar Senha'),
                   keyboardType: TextInputType.emailAddress,
                   obscureText: true,
                   validator: _isLogin()
                       ? null
                       : (_password) {
-                          final password = _password ?? '';
-                          if (password != _passwordController.text) {
-                            return 'Senhas informadas não conferem.';
-                          }
-                          return null;
-                        },
+                    final password = _password ?? '';
+                    if (password != _passwordController.text) {
+                      return 'Senhas informadas não conferem.';
+                    }
+                    return null;
+                  },
                 ),
               const SizedBox(height: 20),
               if (_isLoading)

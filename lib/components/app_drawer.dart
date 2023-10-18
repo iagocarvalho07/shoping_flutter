@@ -20,7 +20,8 @@ class AppDrawer extends StatelessWidget {
             leading: const Icon(Icons.shop),
             title: const Text("Loja"),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed(AppRoute.Home);
+              Navigator.of(context)
+                  .pushReplacementNamed(AppRoute.AuthOrHomeScreen);
             },
           ),
           Divider(),
@@ -36,7 +37,8 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.edit),
             title: Text("Gerenciar Produtos"),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed(AppRoute.PRODUCTSSCRENPAGE);
+              Navigator.of(context)
+                  .pushReplacementNamed(AppRoute.PRODUCTSSCRENPAGE);
             },
           ),
         ],
