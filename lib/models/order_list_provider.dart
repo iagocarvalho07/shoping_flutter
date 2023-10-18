@@ -7,10 +7,11 @@ import 'order.dart';
 
 class OrderListProvider with ChangeNotifier {
   final String _token;
+  final String _userId;
   final _baseUrlORDERS =
       'https://shop-flutter-fb908-default-rtdb.firebaseio.com';
   List<Order> _Items = [];
-  OrderListProvider(this._token, this._Items);
+  OrderListProvider(this._token, this._userId, this._Items);
 
   List<Order> get items {
     return [..._Items];
@@ -24,7 +25,7 @@ class OrderListProvider with ChangeNotifier {
     final date = DateTime.now();
 
     final future = await post(
-      Uri.parse('$_baseUrlORDERS/orders.json?auth=$_token'),
+      Uri.parse('$_baseUrlORDERS/orders/$_userId.json?auth=$_token'),
       body: jsonEncode(
         {
           'total': cart.totalAmount,
@@ -60,7 +61,7 @@ class OrderListProvider with ChangeNotifier {
     List<Order> Items = [];
 
     final getOdersFromFb = await get(
-      Uri.parse('$_baseUrlORDERS/orders.json?auth=$_token'),
+      Uri.parse('$_baseUrlORDERS/orders/$_userId.json?auth=$_token'),
     );
     if (getOdersFromFb.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(getOdersFromFb.body);

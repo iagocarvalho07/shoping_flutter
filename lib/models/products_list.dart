@@ -6,11 +6,14 @@ import 'package:http/http.dart';
 import 'package:shoping_flutter/data/dummy_data.dart';
 import 'package:shoping_flutter/models/products.dart';
 
+import '../utils/constants.dart';
+
 class ProductsList with ChangeNotifier {
-  String _token;
+  final String _token;
+  final String _userId;
   List<Product> _Items = [];
 
-  ProductsList(this._token, this._Items);
+  ProductsList(this._token, this._userId, this._Items);
 
   final _baseUrl = 'https://shop-flutter-fb908-default-rtdb.firebaseio.com';
   final _baseUrlGet =
@@ -50,7 +53,6 @@ class ProductsList with ChangeNotifier {
         "description": product.description,
         "price": product.price,
         "imageUrl": product.imageUrl,
-        "isFavorite": product.isfavorite,
       }),
     );
     return future.then<void>((value) {
@@ -62,7 +64,6 @@ class ProductsList with ChangeNotifier {
           description: product.description,
           price: product.price,
           imageUrl: product.imageUrl,
-          isfavorite: product.isfavorite,
         ),
       );
       notifyListeners();
@@ -72,18 +73,26 @@ class ProductsList with ChangeNotifier {
   Future<void> loadProducts() async {
     _Items.clear();
     final getProductsFromFb = await get(Uri.parse('$_baseUrlGet?auth=$_token'));
-    print(" oque que aconteceu ${getProductsFromFb.body} final da solicitação");
+
+    final Favoritresponse = await get(
+      Uri.parse(
+        '${Constants.userFavoriteUrl}/$_userId.json?auth=$_token',
+      ),
+    );
+    Map<String, dynamic> favData =
+        Favoritresponse.body == 'null' ? {} : jsonDecode(Favoritresponse.body);
+
     Map<String, dynamic> data = jsonDecode(getProductsFromFb.body);
     data.forEach((productId, productData) {
-      _Items.add(
-        Product(
-            id: productId,
-            title: productData['name'],
-            description: productData['description'],
-            price: productData['price'],
-            imageUrl: productData['imageUrl'],
-            isfavorite: productData['isFavorite']),
-      );
+      final isfavorite = favData[productId] ?? false;
+      _Items.add(Product(
+        id: productId,
+        title: productData['name'],
+        description: productData['description'],
+        price: productData['price'],
+        imageUrl: productData['imageUrl'],
+        isfavorite: isfavorite,
+      ));
     });
     notifyListeners();
   }
