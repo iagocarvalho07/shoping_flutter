@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shoping_flutter/execptions/auth_exception.dart';
+import 'package:shoping_flutter/models/auth.provider.dart';
 
 enum AuthMode { signup, login }
 
@@ -20,6 +23,7 @@ class _AuthFormState extends State<AuthForm> {
   };
 
   bool _isLogin() => _authMode == AuthMode.login;
+
   bool _isSignup() => _authMode == AuthMode.signup;
 
   void _switchAuthMode() {
@@ -32,7 +36,22 @@ class _AuthFormState extends State<AuthForm> {
     });
   }
 
-  void _submit() {
+  void _showErrorDialog(String msg) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Ocorreu um Erro"),
+        content: Text(msg),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("Fechar"))
+        ],
+      ),
+    );
+  }
+
+  Future<void> _submit() async {
     final isValid = _formKey.currentState?.validate() ?? false;
 
     if (!isValid) {
@@ -42,14 +61,23 @@ class _AuthFormState extends State<AuthForm> {
     setState(() => _isLoading = true);
 
     _formKey.currentState?.save();
+    AuthProvider autoprovider = Provider.of(context, listen: false);
 
-    if (_isLogin()) {
-      // Login
-    } else {
-      // Registrar
-    }
+    try {
+      if (_isLogin()) {
+        await autoprovider.login(
+          _authData['email']!,
+          _authData['password']!,
+        );
+      } else {
+        await autoprovider.signup(
+          _authData['email']!,
+          _authData['password']!,
+        );
+      }
+    } on AuthException catch (error) {}
 
-    // setState(() => _isLoading = false);
+    setState(() => _isLoading = false);
   }
 
   @override
@@ -97,18 +125,18 @@ class _AuthFormState extends State<AuthForm> {
               if (_isSignup())
                 TextFormField(
                   decoration:
-                  const InputDecoration(labelText: 'Confirmar Senha'),
+                      const InputDecoration(labelText: 'Confirmar Senha'),
                   keyboardType: TextInputType.emailAddress,
                   obscureText: true,
                   validator: _isLogin()
                       ? null
                       : (_password) {
-                    final password = _password ?? '';
-                    if (password != _passwordController.text) {
-                      return 'Senhas informadas não conferem.';
-                    }
-                    return null;
-                  },
+                          final password = _password ?? '';
+                          if (password != _passwordController.text) {
+                            return 'Senhas informadas não conferem.';
+                          }
+                          return null;
+                        },
                 ),
               const SizedBox(height: 20),
               if (_isLoading)
