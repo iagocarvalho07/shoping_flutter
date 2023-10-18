@@ -57,7 +57,7 @@ class OrderListProvider with ChangeNotifier {
   }
 
   Future<void> loadOrders() async {
-    _Items.clear();
+    List<Order> Items = [];
 
     final getOdersFromFb = await get(
       Uri.parse('$_baseUrlORDERS/orders.json?auth=$_token'),
@@ -65,7 +65,7 @@ class OrderListProvider with ChangeNotifier {
     if (getOdersFromFb.body == 'null') return;
     Map<String, dynamic> data = jsonDecode(getOdersFromFb.body);
     data.forEach((orderId, OrderData) {
-      _Items.add(
+      Items.add(
         Order(
           id: orderId,
           total: OrderData['total'],
@@ -82,6 +82,7 @@ class OrderListProvider with ChangeNotifier {
         ),
       );
     });
+    _Items = Items.reversed.toList();
     notifyListeners();
   }
 }
