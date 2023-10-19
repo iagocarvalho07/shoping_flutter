@@ -6,7 +6,7 @@ import 'package:http/http.dart';
 import 'package:shoping_flutter/data/data_store.dart';
 import 'package:shoping_flutter/execptions/auth_exception.dart';
 
-const _ApiKeyWeb = 'AIzaSyAOICR0yxTraeQRfCIpQPyrikFSs99Zh1A';
+const _ApiKeyWeb = '[coloque sua Chave de Api ]';
 
 class Auth with ChangeNotifier {
   String? _token;
