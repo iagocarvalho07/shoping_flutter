@@ -10,6 +10,7 @@ import 'package:shoping_flutter/screens/orders_screen.dart';
 import 'package:shoping_flutter/screens/product_screen_page.dart';
 import 'package:shoping_flutter/screens/products_details_screen.dart';
 import 'package:shoping_flutter/utils/app_routes.dart';
+import 'package:shoping_flutter/utils/custom_route.dart';
 
 import 'models/cart.dart';
 
@@ -32,12 +33,11 @@ class MyApp extends StatelessWidget {
               auth.token ?? '',
               auth.uid ?? '',
               previous?.items ?? [],
-
             );
           },
         ),
         ChangeNotifierProxyProvider<Auth, OrderListProvider>(
-          create: (_) => OrderListProvider('','', []),
+          create: (_) => OrderListProvider('', '', []),
           update: (ctx, auth, previus) {
             return OrderListProvider(
               auth.token ?? '',
@@ -56,6 +56,11 @@ class MyApp extends StatelessWidget {
             secondary: Colors.deepOrange,
           ),
           fontFamily: 'Lato',
+          pageTransitionsTheme: PageTransitionsTheme(
+            builders: {
+              TargetPlatform.android: CustomPageTransitionBuilder(),
+            },
+          ),
         ),
         routes: {
           AppRoute.AuthOrHomeScreen: (ctx) => const AuthOrHomeScreen(),

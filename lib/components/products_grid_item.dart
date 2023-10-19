@@ -53,7 +53,7 @@ class ProductsGridItem extends StatelessWidget {
         child: GestureDetector(
           child: Hero(
             tag: "Image-Tag${product.id}",
-            child: Image.network(
+            child: product.imageUrl.isEmpty ? Center(child: CircularProgressIndicator()) : Image.network(
               product.imageUrl,
               fit: BoxFit.cover,
             ),

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shoping_flutter/models/auth.provider.dart';
 import 'package:shoping_flutter/utils/app_routes.dart';
+import 'package:shoping_flutter/utils/custom_route.dart';
+
+import '../screens/orders_screen.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -32,6 +35,9 @@ class AppDrawer extends StatelessWidget {
             title: const Text("Pedidos"),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(AppRoute.ORDERS);
+              // Navigator.of(context).pushReplacement(
+              //   CustomRoute(builder: (ctx) => const OdersScreen())
+              // );
             },
           ),
           const Divider(),
