@@ -12,12 +12,12 @@ class AppDrawer extends StatelessWidget {
       child: Column(
         children: [
           AppBar(
-            title: Text(
+            title: const Text(
               "Bem Vindo Usuario",
             ),
             automaticallyImplyLeading: false,
           ),
-          Divider(),
+          const Divider(),
           ListTile(
             leading: const Icon(Icons.shop),
             title: const Text("Loja"),
@@ -26,26 +26,26 @@ class AppDrawer extends StatelessWidget {
                   .pushReplacementNamed(AppRoute.AuthOrHomeScreen);
             },
           ),
-          Divider(),
+          const Divider(),
           ListTile(
-            leading: Icon(Icons.payment),
-            title: Text("Pedidos"),
+            leading: const Icon(Icons.payment),
+            title: const Text("Pedidos"),
             onTap: () {
               Navigator.of(context).pushReplacementNamed(AppRoute.ORDERS);
             },
           ),
-          Divider(),
+          const Divider(),
           ListTile(
-            leading: Icon(Icons.edit),
-            title: Text("Gerenciar Produtos"),
+            leading: const Icon(Icons.edit),
+            title: const Text("Gerenciar Produtos"),
             onTap: () {
               Navigator.of(context)
                   .pushReplacementNamed(AppRoute.PRODUCTSSCRENPAGE);
             },
           ),
           ListTile(
-            leading: Icon(Icons.exit_to_app),
-            title: Text("Sair"),
+            leading: const Icon(Icons.exit_to_app),
+            title: const Text("Sair"),
             onTap: () {
               Provider.of<Auth>(context, listen: false).logout();
               Navigator.of(context)

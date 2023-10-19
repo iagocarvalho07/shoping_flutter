@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shoping_flutter/components/app_drawer.dart';
@@ -46,7 +45,7 @@ class _ProductsOverViewScreenState extends State<ProductsOverViewScreen> {
         title: const Text("Minha Loja"),
         actions: [
           PopupMenuButton(
-            icon: Icon(Icons.more_vert),
+            icon: const Icon(Icons.more_vert),
             itemBuilder: (_) => [
               const PopupMenuItem(
                 value: FilterOptions.Favorito,
@@ -88,7 +87,7 @@ class _ProductsOverViewScreenState extends State<ProductsOverViewScreen> {
           : ProductGrid(
               showfavoriteOnly: _showFavoriteOnly,
             ),
-      drawer: AppDrawer(),
+      drawer: const AppDrawer(),
     );
   }
 }

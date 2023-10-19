@@ -17,20 +17,20 @@ class ProductScreenPage extends StatelessWidget {
     final ProductsList productsList = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Gerenciar Produtos"),
+        title: const Text("Gerenciar Produtos"),
         actions: [
           IconButton(
               onPressed: () {
                 Navigator.of(context).pushNamed(AppRoute.PRODUCTFORMESCREEN);
               },
-              icon: Icon(Icons.add))
+              icon: const Icon(Icons.add))
         ],
       ),
-      drawer: AppDrawer(),
+      drawer: const AppDrawer(),
       body: RefreshIndicator(
         onRefresh: () => _refreshProduct(context),
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: ListView.builder(
             itemCount: productsList.itemsCount,
             itemBuilder: (ctx, index) => Column(

@@ -58,12 +58,12 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Lato',
         ),
         routes: {
-          AppRoute.AuthOrHomeScreen: (ctx) => AuthOrHomeScreen(),
+          AppRoute.AuthOrHomeScreen: (ctx) => const AuthOrHomeScreen(),
           AppRoute.PRODUCT_DETAILS: (ctx) => const ProductsDetailsScreen(),
-          AppRoute.CART_SCREEN: (ctx) => CartScreen(),
-          AppRoute.ORDERS: (ctx) => OdersScreen(),
-          AppRoute.PRODUCTSSCRENPAGE: (ctx) => ProductScreenPage(),
-          AppRoute.PRODUCTFORMESCREEN: (ctx) => ProductFormScreen()
+          AppRoute.CART_SCREEN: (ctx) => const CartScreen(),
+          AppRoute.ORDERS: (ctx) => const OdersScreen(),
+          AppRoute.PRODUCTSSCRENPAGE: (ctx) => const ProductScreenPage(),
+          AppRoute.PRODUCTFORMESCREEN: (ctx) => const ProductFormScreen()
         },
         debugShowCheckedModeBanner: false,
       ),

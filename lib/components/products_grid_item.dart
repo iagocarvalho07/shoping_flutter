@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shoping_flutter/models/auth.provider.dart';
@@ -35,8 +34,8 @@ class ProductsGridItem extends StatelessWidget {
           trailing: IconButton(
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text("Produto adicionado com Sucesso!"),
-                duration: Duration(seconds: 2),
+                content: const Text("Produto adicionado com Sucesso!"),
+                duration: const Duration(seconds: 2),
                 action: SnackBarAction(
                   label: "DESFAZER",
                   onPressed: () {

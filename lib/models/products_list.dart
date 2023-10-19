@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:shoping_flutter/data/dummy_data.dart';
 import 'package:shoping_flutter/models/products.dart';
 
 import '../utils/constants.dart';

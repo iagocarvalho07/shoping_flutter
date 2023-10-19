@@ -83,7 +83,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
           content: Text(onError.toString()),
           actions: [
             TextButton(
-                onPressed: () => Navigator.of(context).pop(), child: Text("OK"))
+                onPressed: () => Navigator.of(context).pop(), child: const Text("OK"))
           ],
         ),
       );
@@ -105,7 +105,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
         ],
       ),
       body: _isloading
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(),
             )
           : Padding(

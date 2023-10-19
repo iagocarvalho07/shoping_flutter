@@ -1,4 +1,3 @@
-import 'package:shoping_flutter/screens/auth_or_home_screen.dart';
 
 class AppRoute {
   static const AuthOrHomeScreen = '/';

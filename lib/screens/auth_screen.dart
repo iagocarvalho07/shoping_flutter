@@ -48,7 +48,7 @@ class AuthScreen extends StatelessWidget {
                         color: Theme.of(context).textTheme.titleMedium?.color),
                   ),
                 ),
-                AuthForm()
+                const AuthForm()
               ],
             ),
           )
